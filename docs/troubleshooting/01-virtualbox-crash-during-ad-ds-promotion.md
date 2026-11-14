@@ -39,6 +39,10 @@ referenced memory at 0x000001db1afee000.
 The memory could not be written.
 ```
 
+><img width="612" height="298" alt="image" src="https://github.com/user-attachments/assets/c1644d17-0b5e-438e-bcfd-d2691ae6d481" />
+
+>
+
 ### Initial Error Information
 
 | Item | Value |
@@ -58,12 +62,6 @@ At this stage, it was unclear whether the AD DS promotion had completed successf
 ## 3. Investigation
 
 ### 3.1 VirtualBox Crash Log Analysis
-
-The VirtualBox log file was located at:
-
-```text
-%USERPROFILE%\VirtualBox VMs\DC01\Logs\VBox.log
-```
 
 The following information was identified in the log:
 
@@ -405,22 +403,7 @@ The actual state of the guest system must be independently verified.
 
 ---
 
-## 9. Next Steps
-
-The following tasks are planned:
-
-- [ ] Perform a complete Domain Controller diagnostic using `dcdiag`.
-- [ ] Investigate the remaining DNS warning events.
-- [ ] Verify the KDC service status is Running.
-- [ ] Configure the Windows 11 CLIENT01 virtual machine.
-- [ ] Join CLIENT01 to the `corp.test` domain.
-- [ ] Verify domain user authentication.
-- [ ] Capture Kerberos authentication traffic using Wireshark.
-- [ ] Document the client-to-domain-controller authentication process.
-
----
-
-## 10. Conclusion
+## 9. Conclusion
 
 The VirtualBox crash initially created uncertainty about the success of the Active Directory Domain Controller promotion.
 
