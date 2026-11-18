@@ -325,7 +325,7 @@ The troubleshooting process successfully established network connectivity betwee
 
 ## 6. Key Technical Learnings
 
-### 7.1 Windows Defender Firewall Profiles
+### 6.1 Windows Defender Firewall Profiles
 
 Windows Defender Firewall applies rules according to the active network profile.
 
@@ -333,7 +333,7 @@ A rule configured for the Private profile does not automatically apply to a Doma
 
 It is important to verify the active network profile before modifying firewall rules.
 
-### 7.2 Enabled and Allow Are Different Settings
+### 6.2 Enabled and Allow Are Different Settings
 
 Two important firewall settings must be understood:
 
@@ -342,7 +342,7 @@ Two important firewall settings must be understood:
 
 A rule configured with Action = Allow will not provide the intended permission if the rule itself is disabled.
 
-### 7.3 Inbound and Outbound Traffic
+### 6.3 Inbound and Outbound Traffic
 
 The rule used in this lab was:
 
@@ -358,7 +358,7 @@ Therefore, the inbound firewall rule on CLIENT01-NEW is relevant to allowing tha
 
 ---
 
-## 8. Conclusion
+## 7. Conclusion
 
 The initial connectivity issue was resolved by enabling the Domain profile's ICMPv4 inbound firewall rule on CLIENT01-NEW.
 
