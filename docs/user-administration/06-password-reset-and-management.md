@@ -154,13 +154,22 @@ Verify that the user is required to change the temporary password before accessi
 Windows requires the user to change their password before completing the sign-in process.
 
 
+Screenshot1:
 <img width="579" height="691" alt="image" src="https://github.com/user-attachments/assets/bc29069a-c093-48c9-bc8a-af071a77e7d7" />
 
 
+
+
+
+Screenshot2:
 <img width="483" height="852" alt="image" src="https://github.com/user-attachments/assets/0f7132b9-5989-4328-9862-19aa5cb72826" />
 
 
 
+
+
+
+Screenshot3:
 <img width="487" height="612" alt="image" src="https://github.com/user-attachments/assets/c7f1affb-3e5f-42cd-b67c-77d4df1fea42" />
 
 
