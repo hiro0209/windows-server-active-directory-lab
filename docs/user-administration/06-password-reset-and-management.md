@@ -308,21 +308,12 @@ This provides additional evidence that the password update was recorded in Activ
 
 ---
 
-## 9. Key Takeaways
+## 9. Key Findings
 
-Through this lab, I practised the following Active Directory administration tasks:
+Through this lab, I successfully demonstrated and verified the following Active Directory administration tasks:
 
-- Resetting a domain user's password through ADUC.
-- Understanding the difference between password reset and account unlocking.
+- Resetting a domain user's password through Active Directory Users and Computers (ADUC).
 - Enforcing a password change at the next logon.
-- Verifying authentication failure using an old password.
-- Confirming successful authentication using the updated password.
-- Checking the `PasswordLastSet` attribute using PowerShell.
-
-### Help Desk Relevance
-
-Password reset requests are common in IT support environments.
-
-A Help Desk technician should verify the user's identity according to organisational procedures before resetting a password. Temporary credentials should be handled securely, and the user should be encouraged to establish a new password immediately.
-
-This lab demonstrates the technical workflow for handling a basic Active Directory password reset request.
+- Verifying that the old password was rejected after the password reset.
+- Confirming that the user could successfully change their temporary password and log in.
+- Verifying the updated `PasswordLastSet` attribute using PowerShell.
