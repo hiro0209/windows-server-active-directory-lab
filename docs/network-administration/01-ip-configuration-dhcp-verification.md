@@ -1,4 +1,4 @@
-# 01. IP Configuration and DHCP Verification
+# IP Configuration and DHCP Verification
 
 ## 1. Overview
 
