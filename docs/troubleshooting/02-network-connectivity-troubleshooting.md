@@ -1,4 +1,4 @@
-# 04. Network Connectivity Troubleshooting
+# Network Connectivity Troubleshooting
 
 ## 1. Overview
 
