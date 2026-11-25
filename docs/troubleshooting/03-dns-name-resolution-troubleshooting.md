@@ -75,7 +75,9 @@ External traffic is forwarded through the NAT adapter's default gateway (`10.0.3
 
 **Screenshot 1: Client Network Configuration**
 
-![Client Network Configuration](../../screenshots/troubleshooting/03-01-client-network-configuration.png)
+<img width="949" height="748" alt="image" src="https://github.com/user-attachments/assets/f72fce6d-0b79-4dfe-be6a-e6d2ebe06e04" />
+<img width="1008" height="388" alt="image" src="https://github.com/user-attachments/assets/9ddb44e6-277d-4d0a-8af2-4c6b0aa8bf68" />
+
 
 ### Step 2. Test External DNS Resolution
 
@@ -131,7 +133,9 @@ The reason for the initial timeout could not be confirmed. The issue was not rep
 
 **Screenshot 2: External DNS Resolution**
 
-![External DNS Resolution](../../screenshots/troubleshooting/03-02-external-dns-resolution.png)
+
+<img width="616" height="279" alt="image" src="https://github.com/user-attachments/assets/666c9472-785c-4bb4-83ad-16992ab2a07d" />
+
 
 ### Step 3. Test Internal DNS Resolution
 
@@ -180,11 +184,15 @@ This confirmed that the internal forward DNS lookup was working correctly.
 
 **Screenshot 3: Internal DNS Resolution**
 
-![Internal DNS Resolution](../../screenshots/troubleshooting/03-03-internal-dns-resolution.png)
+<img width="664" height="252" alt="image" src="https://github.com/user-attachments/assets/64674568-e19b-4567-ae21-2ceb729b2876" />
+
+
 
 **Screenshot 4: Internal DNS Query to Specified Server**
 
-![Internal DNS Query](../../screenshots/troubleshooting/03-04-internal-dns-query.png)
+<img width="811" height="259" alt="image" src="https://github.com/user-attachments/assets/870824bd-540d-42e9-8226-ad98cf454014" />
+
+
 
 ## 4. Reverse DNS Investigation
 
@@ -228,7 +236,9 @@ Further investigation was required to identify whether the Reverse Lookup Zone o
 
 **Screenshot 5: Initial Reverse DNS Lookup Failure**
 
-![Reverse DNS Lookup Failure](../../screenshots/troubleshooting/03-05-reverse-dns-lookup.png)
+<img width="678" height="166" alt="image" src="https://github.com/user-attachments/assets/eb72aa34-cd36-47e7-980b-3231248ebe31" />
+
+
 
 ### Step 5. Examine DNS Reverse Lookup Zones
 
@@ -254,7 +264,10 @@ This explained why the reverse lookup could not find the corresponding PTR recor
 
 **Screenshot 6: DNS Reverse Lookup Zones Before Configuration**
 
-![Reverse Lookup Zones Before Configuration](../../screenshots/troubleshooting/03-06-dns-reverse-lookup-zones-before.png)
+<img width="1602" height="1327" alt="image" src="https://github.com/user-attachments/assets/96eac89b-7169-4624-a3f2-9f5cd972c3d6" />
+
+
+<img width="1129" height="792" alt="image" src="https://github.com/user-attachments/assets/f7731775-b318-4cec-b6c7-5d56d6f0d84a" />
 
 ## 5. DNS Configuration and Resolution
 
@@ -324,7 +337,34 @@ However, no PTR record for DC01 was present.
 
 **Screenshot 7: Reverse Lookup Zone Created**
 
-![Reverse Lookup Zone Created](../../screenshots/troubleshooting/03-07-reverse-lookup-zone-created.png)
+<img width="1129" height="790" alt="image" src="https://github.com/user-attachments/assets/80a2595b-b99f-41d5-99c1-4f49181f84df" />
+
+
+<img width="745" height="628" alt="image" src="https://github.com/user-attachments/assets/59ee9db5-8d59-43a1-ab23-1b32b54f3343" />
+
+
+<img width="747" height="628" alt="image" src="https://github.com/user-attachments/assets/2703f77b-a6cd-4a95-9379-f0502330f636" />
+
+
+<img width="750" height="631" alt="image" src="https://github.com/user-attachments/assets/3562fd0c-64b6-4e35-b202-32a972882522" />
+
+
+<img width="747" height="631" alt="image" src="https://github.com/user-attachments/assets/2139258b-1eb8-4172-b4bb-3587048a92e0" />
+
+
+<img width="748" height="630" alt="image" src="https://github.com/user-attachments/assets/95ef5518-01f1-427a-90d7-e282f3cf1287" />
+
+
+<img width="747" height="633" alt="image" src="https://github.com/user-attachments/assets/f7b93333-8358-4f76-9e2c-cc28f5ad754c" />
+
+
+<img width="748" height="628" alt="image" src="https://github.com/user-attachments/assets/7b7dbbdc-085a-437f-8943-e8c5e0660a39" />
+
+
+<img width="1128" height="792" alt="image" src="https://github.com/user-attachments/assets/f5328a42-e3e8-453d-bc15-20c4eed8fee0" />
+
+
+<img width="1201" height="795" alt="image" src="https://github.com/user-attachments/assets/2a4d7530-8a8b-40cd-8957-817c7e8dfcd9" />
 
 ### Step 7. Register a PTR Record
 
@@ -371,7 +411,13 @@ The PTR record was successfully created.
 
 **Screenshot 8: PTR Record Created**
 
-![PTR Record Created](../../screenshots/troubleshooting/03-08-ptr-record-created.png)
+<img width="1203" height="793" alt="image" src="https://github.com/user-attachments/assets/7ba5a5d8-7a85-443b-9a8b-767e660bb9ef" />
+
+
+<img width="1203" height="793" alt="image" src="https://github.com/user-attachments/assets/0ed27243-0cb5-4191-8218-e9c39b48933e" />
+
+
+<img width="1201" height="792" alt="image" src="https://github.com/user-attachments/assets/16d1b488-8331-4d63-9d75-fe64112b77c8" />
 
 ### Step 8. Verify Reverse DNS Resolution
 
@@ -399,6 +445,9 @@ dc01.corp.test
 The previous NXDOMAIN response was resolved.
 
 This confirmed that reverse DNS resolution was now working correctly.
+
+<img width="651" height="211" alt="image" src="https://github.com/user-attachments/assets/7477759e-1581-499c-90cf-a894b9ba17ce" />
+
 
 ## 6. Final Verification Results
 
