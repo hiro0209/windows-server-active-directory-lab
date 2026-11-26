@@ -272,7 +272,8 @@ Stopping a service manually does not automatically change its startup configurat
 
 **Screenshot 4: Print Spooler Stopped**
 
-<img width="514" height="286" alt="image" src="https://github.com/user-attachments/assets/fc67cada-dbbe-472e-bba9-4b1bb50e9fea" />
+<img width="1072" height="1144" alt="image" src="https://github.com/user-attachments/assets/e66d2c93-3184-4e96-a96c-2525558d1c80" />
+
 
 
 <img width="1243" height="1134" alt="image" src="https://github.com/user-attachments/assets/5f5d4b3c-fab4-4eec-8ef2-b485478a2e42" />
@@ -384,14 +385,6 @@ Through this lab, I practiced the following Windows service administration and t
 - Simulating a service interruption.
 - Restarting a stopped service.
 - Verifying service recovery using PowerShell.
-
-### Help Desk Relevance
-
-Windows service failures can affect everyday IT operations, including printing, networking, authentication, and system updates.
-
-A structured troubleshooting approach helps technicians identify whether an issue is related to service status, startup configuration, dependencies, or permissions.
-
-For a Help Desk technician, understanding how to inspect and safely restart Windows services is a useful foundational troubleshooting skill.
 
 ## 11. Conclusion
 
