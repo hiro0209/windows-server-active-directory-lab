@@ -1,1 +1,257 @@
+# Login and Authentication Troubleshooting
 
+## 1. Objective
+
+Investigate a Windows domain login failure in an Active Directory environment.
+
+The objectives were to:
+
+- Reproduce and investigate a domain login failure.
+- Examine Windows Security Event ID 4625.
+- Interpret the authentication failure status code.
+- Check the Active Directory user account status.
+- Investigate the relationship between the authentication failure and the previously identified time synchronisation issue.
+- Verify successful domain login after restoring time synchronisation.
+
+## 2. Lab Environment
+
+| Component | Configuration |
+|---|---|
+| Domain Controller | DC01 |
+| Operating System | Windows Server 2025 |
+| Domain Name | corp.test |
+| DC IP Address | 192.168.56.10 |
+| Client Computer | CLIENT01-NEW |
+| Client OS | Windows 11 |
+| Client IP Address | 192.168.56.105 |
+| Test User | testuser01 |
+
+## 3. Investigating the Login Failure
+
+### 3.1 Reproducing the Authentication Issue
+
+A domain login failure was investigated using the Windows client and Active Directory environment.
+
+The investigation focused on identifying the failed logon events recorded by Windows Security auditing.
+
+**Execution location:** DC01
+
+### 3.2 Checking the Current User Context
+
+The following command was used earlier in the investigation.
+
+```powershell
+whoami /all
+```
+
+**Purpose:**
+
+Identify the currently logged-in user and examine their security context.
+
+**Command explanation:**
+
+- `whoami`: Displays the current logged-in account.
+- `/all`: Displays the user's SID, group memberships, and privileges.
+
+This was used to examine the current domain account and its security permissions.
+
+### 3.3 Checking Failed Logon Events (Event ID 4625)
+
+The following command was executed on DC01.
+
+```powershell
+Get-WinEvent -FilterHashtable @{LogName='Security';Id=4625} -MaxEvents 1 | Format-List Message
+```
+
+**Purpose:**
+
+Retrieve the latest failed logon event from the Windows Security event log.
+
+**Command explanation:**
+
+| Parameter | Meaning |
+|---|---|
+| `Get-WinEvent` | Retrieves Windows event log records. |
+| `-FilterHashtable` | Filters events using specified conditions. |
+| `LogName='Security'` | Searches the Security event log. |
+| `Id=4625` | Selects failed logon events. |
+| `-MaxEvents 1` | Retrieves the latest matching event only. |
+| `Format-List Message` | Displays the event's detailed message in list format. |
+
+**Important Event ID:**
+
+Event ID 4625 represents a failed logon attempt.
+
+The event details were examined to identify the account involved and the authentication failure status.
+
+**Screenshot 1 — Failed Logon Event**
+
+Insert the screenshot of the PowerShell output showing the Event ID 4625 message here.
+
+`[Screenshot: Event ID 4625 - Failed Logon Event]`
+
+### 3.4 Analysing the Authentication Status Code
+
+The following values were identified in the Event ID 4625 details.
+
+| Field | Value |
+|---|---|
+| Status | `0xC0000133` |
+| SubStatus | `0x0` |
+
+**Status: 0xC0000133**
+
+This corresponds to `STATUS_TIME_DIFFERENCE_AT_DC`.
+
+It indicates a time difference between the client and the Domain Controller in the authentication process.
+
+**SubStatus: 0x0**
+
+No additional substatus information was recorded.
+
+The status code was relevant to the previously identified time synchronisation issue.
+
+### 3.5 Checking the Active Directory Account
+
+The Active Directory account was checked to determine whether the failure was related to the user's account state.
+
+**Execution location:** DC01
+
+```powershell
+Get-ADUser testuser01
+```
+
+**Purpose:**
+
+Retrieve the Active Directory user object for `testuser01`.
+
+**Command explanation:**
+
+- `Get-ADUser`: Retrieves information about an Active Directory user.
+- `testuser01`: Specifies the user account to retrieve.
+
+The account information examined included:
+
+| Attribute | Observed result |
+|---|---|
+| Name | Test User |
+| SamAccountName | testuser01 |
+| Enabled | True |
+| LockedOut | False |
+| PasswordExpired | False |
+| PasswordLastSet | 11/17/2026 9:02:10 PM |
+
+**Analysis:**
+
+- The account was enabled.
+- The account was not locked out.
+- The password had not expired.
+
+Therefore, these account conditions did not explain the authentication failure.
+
+`[Screenshot: Active Directory User Account Status]`
+
+## 4. Time Synchronisation Investigation and Resolution
+
+The authentication investigation was considered alongside the previously identified time synchronisation problem.
+
+The Domain Controller had previously been approximately nine days behind the Windows client.
+
+The time synchronisation issue had been investigated and corrected in the earlier Windows Time Service troubleshooting work.
+
+### 4.1 Correcting the Domain Controller Time
+
+The DC01 clock was corrected using the client time as a reference.
+
+The external NTP server was configured as:
+
+`time.cloudflare.com`
+
+### 4.2 Restoring NTP Synchronisation
+
+The Domain Controller was synchronised with the external NTP server.
+
+The successful synchronisation was verified using Windows Time Service status information.
+
+### 4.3 Configuring the Client to Use the Domain Hierarchy
+
+On CLIENT01-NEW, the client was configured to synchronise its time through the domain hierarchy.
+
+The following commands were used during the previous time synchronisation troubleshooting work.
+
+```powershell
+w32tm /config /syncfromflags:domhier /update
+```
+
+**Purpose:**
+
+Configure the Windows client to obtain its time from the Active Directory domain hierarchy.
+
+**Command explanation:**
+
+- `w32tm`: Windows Time Service command-line utility.
+- `/config`: Changes Windows Time Service configuration.
+- `/syncfromflags:domhier`: Uses the domain hierarchy as the time source.
+- `/update`: Applies the updated configuration.
+
+The client was then instructed to synchronise again.
+
+```powershell
+w32tm /resync /rediscover
+```
+
+**Purpose:**
+
+Rediscover the appropriate time source and request time synchronisation.
+
+**Command explanation:**
+
+- `/resync`: Requests an immediate time synchronisation.
+- `/rediscover`: Rediscovers available time sources.
+
+The client successfully synchronised with:
+
+`dc01.corp.test`
+
+This confirmed that the client was using the Domain Controller as its time source.
+
+## 5. Login Verification
+
+After restoring time synchronisation, the domain login was tested again using:
+
+`testuser01`
+
+**Result:**
+
+The domain login was successful.
+
+This demonstrated that the user could authenticate successfully after the time synchronisation issue had been resolved.
+
+`[Screenshot: Successful Domain Login - testuser01]`
+
+## 6. Conclusion
+
+The investigation identified a significant time synchronisation problem between the Domain Controller and the Windows client.
+
+Windows Security Event ID 4625 was used to investigate the failed logon attempt.
+
+The recorded authentication status was:
+
+- Status: `0xC0000133`
+- SubStatus: `0x0`
+
+The Active Directory account was confirmed to be enabled, not locked out, and not expired.
+
+After restoring time synchronisation between the Domain Controller and the client, the `testuser01` domain login was successful.
+
+The investigation demonstrated practical experience in:
+
+- Windows Security Event Log analysis.
+- Identifying failed logon events using Event ID 4625.
+- Interpreting Windows authentication status codes.
+- Checking Active Directory user account properties.
+- Troubleshooting Windows Time Service.
+- Configuring domain-based time synchronisation.
+- Verifying successful domain authentication after troubleshooting.
+
+**Note:** The successful login after time synchronisation was restored supports a relationship between the time synchronisation issue and the authentication failure. However, the available evidence does not independently prove that the time difference was the only cause of the failed login.
