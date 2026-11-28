@@ -6,18 +6,18 @@ This section documents practical IT support tasks using Microsoft Entra ID and M
 
 The purpose of this lab is to develop foundational skills required for Help Desk and IT Support roles, including identity management, user administration, access control, and sign-in troubleshooting.
 
-All procedures are performed in a dedicated lab environment. Screenshots are included to demonstrate the configuration and verification process.
+The Microsoft Entra ID environment has already been created and configured. Therefore, environment setup and Azure account registration are outside the scope of this portfolio.
+
+The focus is on practical administration tasks and troubleshooting procedures that are relevant to real-world IT support operations.
 
 ## Objectives
 
-- Understand the relationship between Microsoft accounts, Azure accounts, and Microsoft Entra ID tenants.
-- Set up a Microsoft Entra ID lab environment.
 - Create and manage user accounts.
-- Reset user passwords where supported by account permissions and licensing.
-- Create and manage groups.
+- Reset user passwords and understand the required permissions.
+- Create security groups and manage group membership.
 - Understand role-based access control (RBAC).
-- Explore multifactor authentication (MFA).
-- Review sign-in logs and investigate common authentication issues.
+- Configure and investigate multifactor authentication (MFA).
+- Review sign-in logs and investigate authentication failures.
 
 ## Lab Environment
 
@@ -25,6 +25,8 @@ All procedures are performed in a dedicated lab environment. Screenshots are inc
 |---|---|
 | Identity platform | Microsoft Entra ID |
 | Cloud platform | Microsoft Azure |
+| License | Microsoft Entra ID Free |
+| Administrative role | Global Administrator |
 | Lab purpose | Help Desk / IT Support practice |
 | Documentation | Markdown |
 
@@ -32,25 +34,28 @@ All procedures are performed in a dedicated lab environment. Screenshots are inc
 
 ## Exercises
 
-### 1. Environment Setup
-Create an Azure account and prepare a Microsoft Entra ID lab environment.
+### 1. User Management
 
-### 2. User Management
-Create, view, update, and manage user accounts.
+Create, view, update, disable, and manage user accounts.
 
-### 3. Password Reset
+### 2. Password Reset
+
 Practise password reset procedures and understand the required permissions.
 
-### 4. Group Management
+### 3. Group Management
+
 Create security groups and manage group membership.
 
-### 5. Role-Based Access Control
+### 4. Role-Based Access Control
+
 Understand administrative roles and the principle of least privilege.
 
-### 6. Multifactor Authentication
+### 5. Multifactor Authentication
+
 Explore MFA configuration and authentication methods.
 
-### 7. Sign-in Logs and Troubleshooting
+### 6. Sign-in Logs and Troubleshooting
+
 Review sign-in logs and investigate authentication failures.
 
 ## Documentation Principles
