@@ -6,7 +6,7 @@ Investigate a Windows domain login failure in an Active Directory environment.
 
 The objectives were to:
 
-- Reproduce and investigate a domain login failure.
+- Investigate a domain login failure.
 - Examine Windows Security Event ID 4625.
 - Interpret the authentication failure status code.
 - Check the Active Directory user account status.
@@ -28,7 +28,7 @@ The objectives were to:
 
 ## 3. Investigating the Login Failure
 
-### 3.1 Reproducing the Authentication Issue
+### 3.1 Investigating the Authentication Issue
 
 A domain login failure was investigated using the Windows client and Active Directory environment.
 
