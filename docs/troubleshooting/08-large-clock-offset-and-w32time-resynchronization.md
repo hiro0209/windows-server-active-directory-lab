@@ -1,14 +1,14 @@
-# Troubleshooting: Large Clock Offset and Windows Time Synchronization Recovery
+# Large Clock Offset and Windows Time Synchronization Recovery
 
 ## 1. Overview
 
 This document records the investigation and recovery of a Windows Time synchronization issue in the Windows Server 2025 Active Directory lab.
 
-DC01 was approximately nine days behind CLIENT01-NEW. Although an external NTP server was already configured, the Windows Time service was not successfully synchronizing.
+DC01 was approximately nine days behind CLIENT01. Although an external NTP server was already configured, the Windows Time service was not successfully synchronizing.
 
 The initial synchronization request was rejected because the required time correction was too large.
 
-The issue was resolved by manually correcting the DC01 system clock, successfully synchronizing DC01 with the external NTP server, and then restoring domain-hierarchy synchronization on CLIENT01-NEW.
+The issue was resolved by manually correcting the DC01 system clock, successfully synchronizing DC01 with the external NTP server, and then restoring domain-hierarchy synchronization on CLIENT01.
 
 ### Objectives
 
@@ -18,7 +18,7 @@ The issue was resolved by manually correcting the DC01 system clock, successfull
 - Investigate why Windows Time was not synchronizing.
 - Correct the DC01 system clock.
 - Restore external NTP synchronization on DC01.
-- Restore domain-hierarchy synchronization on CLIENT01-NEW.
+- Restore domain-hierarchy synchronization on CLIENT01.
 - Verify the final time sources and synchronization status.
 
 ---
@@ -33,7 +33,7 @@ The issue was resolved by manually correcting the DC01 system clock, successfull
 | Domain | `corp.test` |
 | Domain Controller FQDN | `dc01.corp.test` |
 | DC01 Host-only IP | `192.168.56.10` |
-| Domain Client | CLIENT01-NEW |
+| Domain Client | CLIENT01 |
 | Client OS | Windows 11 |
 | Client Host-only IP | `192.168.56.105` |
 | External NTP server | `time.cloudflare.com` |
@@ -56,6 +56,9 @@ Adjust for daylight saving time automatically
 
 was enabled.
 
+<img width="1597" height="1201" alt="image" src="https://github.com/user-attachments/assets/e6cb06eb-3fcb-4a10-a22b-1fb8490af090" />
+
+
 **Important distinction:**
 
 A time zone determines how UTC is displayed as local time. Daylight Saving Time adjusts the local time offset when applicable.
@@ -70,7 +73,7 @@ A correct time zone does not guarantee that the underlying system clock is synch
 
 ### 3.1 Observed Time Difference
 
-The date displayed on DC01 was approximately nine days behind the date displayed on CLIENT01-NEW.
+The date displayed on DC01 was approximately nine days behind the date displayed on CLIENT01.
 
 The client provided the following reference time during the recovery process:
 
@@ -107,12 +110,12 @@ The expected time hierarchy was:
                    |
                    | Domain Time Hierarchy
                    v
-              CLIENT01-NEW
+                CLIENT01
 ```
 
 DC01 is responsible for synchronizing with the external time source in this lab.
 
-CLIENT01-NEW should obtain its time through the Active Directory domain hierarchy.
+CLIENT01 should obtain its time through the Active Directory domain hierarchy.
 
 ---
 
@@ -135,6 +138,15 @@ CLIENT01-NEW should obtain its time through the Active Directory domain hierarch
 ```text
 dc01.corp.test
 ```
+
+<img width="1597" height="1200" alt="image" src="https://github.com/user-attachments/assets/be6830db-3afd-40c6-b9da-2f6835484b20" />
+
+<img width="541" height="997" alt="image" src="https://github.com/user-attachments/assets/117299ff-0896-487b-8a94-325c463787ee" />
+
+<img width="1300" height="892" alt="image" src="https://github.com/user-attachments/assets/23073af2-b01f-4fce-ba7b-f4b2cf5eea69" />
+
+<img width="568" height="417" alt="image" src="https://github.com/user-attachments/assets/d4c75555-6c77-4209-af48-27160ab8c8bc" />
+
 
 DC01 was confirmed as the PDC Emulator.
 
@@ -205,6 +217,9 @@ Displays the time source currently selected by the Windows Time service.
 ```text
 Free-running System Clock
 ```
+
+<img width="655" height="124" alt="image" src="https://github.com/user-attachments/assets/66d7400a-ecb5-4dd5-948f-500dd897669a" />
+
 
 **Interpretation:**
 
@@ -414,7 +429,7 @@ The next step was to bring DC01's system clock close to the correct time before 
 
 ### 6.1 Obtain the Correct Reference Time
 
-**Reference machine:** CLIENT01-NEW
+**Reference machine:** CLIENT01
 
 The client displayed:
 
@@ -433,6 +448,9 @@ This time was used as the reference for correcting DC01.
 ```powershell
 Set-Date -Date "11/27/2026 20:57:36"
 ```
+
+<img width="876" height="288" alt="image" src="https://github.com/user-attachments/assets/9c563948-bc6f-46f6-a82f-49a153909268" />
+
 
 **Purpose:**
 
@@ -487,6 +505,9 @@ Requests synchronization after the system clock has been corrected.
 
 The synchronization request completed successfully.
 
+<img width="730" height="180" alt="image" src="https://github.com/user-attachments/assets/faef1cf9-be60-4451-8369-07e2644b15c1" />
+
+
 ### 7.2 Verify the Selected Time Source
 
 **Execution location:** DC01
@@ -502,6 +523,9 @@ w32tm /query /source
 ```text
 time.cloudflare.com
 ```
+
+<img width="667" height="124" alt="image" src="https://github.com/user-attachments/assets/60d66fd0-aca9-4750-8273-b90b971dc8e3" />
+
 
 **Interpretation:**
 
@@ -533,15 +557,18 @@ w32tm /query /status
 
 The updated successful synchronization time and external source confirmed that DC01's external NTP synchronization had recovered.
 
+<img width="745" height="375" alt="image" src="https://github.com/user-attachments/assets/a315b672-efe5-4e6b-bca4-d3cdd87f4750" />
+
+
 ---
 
-## 8. Restore Domain-Hierarchy Synchronization on CLIENT01-NEW
+## 8. Restore Domain-Hierarchy Synchronization on CLIENT01
 
 After DC01 had successfully synchronized with the external NTP server, the client was checked.
 
 ### 8.1 Check the Client's Initial Time Source
 
-**Execution location:** CLIENT01-NEW
+**Execution location:** CLIENT01
 
 **Command:**
 
@@ -555,15 +582,18 @@ w32tm /query /source
 Local CMOS Clock
 ```
 
+<img width="634" height="66" alt="image" src="https://github.com/user-attachments/assets/852d981d-1197-4b68-b6e9-3f200ad61075" />
+
+
 **Interpretation:**
 
-CLIENT01-NEW was using its local clock rather than obtaining time from the domain hierarchy.
+CLIENT01 was using its local clock rather than obtaining time from the domain hierarchy.
 
 The client needed to be configured to use the Active Directory domain time hierarchy.
 
 ### 8.2 Configure Domain-Hierarchy Synchronization
 
-**Execution location:** CLIENT01-NEW
+**Execution location:** CLIENT01
 
 **Command:**
 
@@ -590,13 +620,16 @@ Configures the Windows Time service to obtain time through the Active Directory 
 The command completed successfully.
 ```
 
+<img width="909" height="91" alt="image" src="https://github.com/user-attachments/assets/4213d7e6-c605-4473-9c38-79ed03ddb653" />
+
+
 **Interpretation:**
 
-CLIENT01-NEW was configured to follow the domain time hierarchy rather than relying on a manually specified external NTP peer.
+CLIENT01 was configured to follow the domain time hierarchy rather than relying on a manually specified external NTP peer.
 
 ### 8.3 Request Client Synchronization
 
-**Execution location:** CLIENT01-NEW
+**Execution location:** CLIENT01
 
 **Command:**
 
@@ -612,9 +645,12 @@ Requests the client to rediscover its domain time source and synchronize.
 
 The synchronization request completed successfully.
 
+<img width="706" height="117" alt="image" src="https://github.com/user-attachments/assets/930be192-b1e3-4120-b184-11c9cf5719d6" />
+
+
 ### 8.4 Verify the Client's Selected Time Source
 
-**Execution location:** CLIENT01-NEW
+**Execution location:** CLIENT01
 
 **Command:**
 
@@ -625,12 +661,15 @@ w32tm /query /source
 **Observed result:**
 
 ```text
-dc01.corp.test
+DC01.corp.test
 ```
+
+<img width="637" height="91" alt="image" src="https://github.com/user-attachments/assets/2c16d73f-39c0-4763-93a9-9475e366e7ac" />
+
 
 **Interpretation:**
 
-CLIENT01-NEW was now using DC01 as its time source.
+CLIENT01 was now using DC01 as its time source.
 
 This matched the expected Active Directory domain time hierarchy.
 
@@ -643,14 +682,14 @@ This section summarizes all commands used during this troubleshooting session.
 | Command | Execution location | Purpose |
 |---|---|---|
 | `w32tm /query /configuration` | DC01 | Inspect effective Windows Time configuration |
-| `w32tm /query /source` | DC01 / CLIENT01-NEW | Identify the currently selected time source |
+| `w32tm /query /source` | DC01 / CLIENT01 | Identify the currently selected time source |
 | `w32tm /query /peers` | DC01 | Inspect configured NTP peers and their states |
 | `Get-Service W32Time` | DC01 | Check whether the Windows Time service is running |
 | `w32tm /stripchart /computer:time.cloudflare.com /samples:3 /dataonly` | DC01 | Measure the offset against the external NTP server |
 | `w32tm /query /status` | DC01 | Inspect synchronization status |
-| `w32tm /resync /rediscover` | DC01 / CLIENT01-NEW | Request synchronization and rediscover time sources |
+| `w32tm /resync /rediscover` | DC01 / CLIENT01 | Request synchronization and rediscover time sources |
 | `Set-Date -Date "11/27/2026 20:57:36"` | DC01 | Manually correct the local system clock |
-| `w32tm /config /syncfromflags:domhier /update` | CLIENT01-NEW | Configure synchronization through the AD domain hierarchy |
+| `w32tm /config /syncfromflags:domhier /update` | CLIENT01 | Configure synchronization through the AD domain hierarchy |
 
 ### 9.1 Important Command Differences
 
@@ -770,7 +809,7 @@ Sending resync command to local computer
 For example:
 
 - If the command is executed on DC01, the local computer is DC01.
-- If the command is executed on CLIENT01-NEW, the local computer is CLIENT01-NEW.
+- If the command is executed on CLIENT01, the local computer is CLIENT01.
 
 It does not mean that the synchronization source is necessarily the local hardware clock.
 
@@ -816,7 +855,7 @@ The actual synchronization request is performed using:
 w32tm /resync /rediscover
 ```
 
-### Q10. Why was CLIENT01-NEW using `Local CMOS Clock`?
+### Q10. Why was CLIENT01 using `Local CMOS Clock`?
 
 The client was not using the expected domain time source at that point.
 
@@ -841,7 +880,7 @@ They are two different synchronization roles.
 | Computer | Synchronization method | Expected source |
 |---|---|---|
 | DC01 | External NTP | `time.cloudflare.com` |
-| CLIENT01-NEW | Active Directory domain hierarchy | `dc01.corp.test` |
+| CLIENT01 | Active Directory domain hierarchy | `dc01.corp.test` |
 
 The client should not independently use an external NTP peer when it is intended to follow the domain hierarchy.
 
@@ -869,7 +908,7 @@ The Windows Settings interface also differed from the expected Windows 11 instru
 
 Rather than continuing to search for an unavailable GUI option, the Windows Time service was diagnosed and repaired using PowerShell.
 
-The operating system being investigated was Windows Server 2025. CLIENT01-NEW was the Windows 11 client.
+The operating system being investigated was Windows Server 2025. CLIENT01 was the Windows 11 client.
 
 ### Q14. Why is it important to check both the source and the status?
 
@@ -888,29 +927,7 @@ Together with an updated successful synchronization time, these provide stronger
 
 ---
 
-## 11. Final Verification Summary
-
-### 11.1 DC01
-
-| Verification | Initial state | Final state |
-|---|---|---|
-| Configured NTP server | `time.cloudflare.com` | `time.cloudflare.com` |
-| Selected source | Free-running System Clock | `time.cloudflare.com` |
-| W32Time service | Running | Running |
-| Leap Indicator | `3 (not synchronized)` | `0 (no warning)` |
-| Last Successful Sync Time | Not successfully updated | Updated |
-| Synchronization request | Rejected | Successful |
-
-### 11.2 CLIENT01-NEW
-
-| Verification | Initial state | Final state |
-|---|---|---|
-| Selected source | Local CMOS Clock | `dc01.corp.test` |
-| Synchronization method | Not following the expected domain source | Domain hierarchy configured |
-| Configuration command | Not yet applied | Successful |
-| Resynchronization request | Not yet completed | Successful |
-
-### 11.3 Final Time Synchronization Architecture
+### 11.1 Final Time Synchronization Architecture
 
 ```text
           time.cloudflare.com
@@ -924,16 +941,16 @@ Together with an updated successful synchronization time, these provide stronger
                   | Active Directory
                   | Domain Hierarchy
                   v
-             CLIENT01-NEW
+             CLIENT01
 ```
 
 **Overall result:**
 
 DC01 successfully recovered external NTP synchronization.
 
-CLIENT01-NEW was configured to follow the domain time hierarchy and successfully completed its synchronization request.
+CLIENT01 was configured to follow the domain time hierarchy and successfully completed its synchronization request.
 
-The final selected source on the client was confirmed as `dc01.corp.test`.
+The final selected source on the client was confirmed as `DC01.corp.test`.
 
 ---
 
@@ -983,31 +1000,7 @@ Accurate synchronization is therefore important for reliable Active Directory au
 
 ---
 
-## 13. Screenshots to Include
-
-The following screenshots should be added to the GitHub document.
-
-| Screenshot | Recommended location | Evidence |
-|---|---|---|
-| 1. PDC Emulator role | Section 4.1 | `dc01.corp.test` shown as PDC Emulator |
-| 2. Initial NTP configuration | Section 4.2 | `NtpServer`, `Type`, and `AnnounceFlags` |
-| 3. Initial time source | Section 4.3 | `Free-running System Clock` |
-| 4. Initial NTP offset | Section 4.6 | Approximately `+801716` seconds |
-| 5. Initial synchronization error | Section 5.1 | Required time change was too big |
-| 6. Manual clock correction | Section 6.2 | Successful `Set-Date` execution |
-| 7. DC01 final time source | Section 7.2 | `time.cloudflare.com` |
-| 8. DC01 final synchronization status | Section 7.3 | Leap Indicator 0 and updated last sync |
-| 9. Client initial time source | Section 8.1 | `Local CMOS Clock` |
-| 10. Client domain hierarchy configuration | Section 8.2 | Successful configuration message |
-| 11. Client final time source | Section 8.4 | `dc01.corp.test` |
-
-Only screenshots actually captured during the lab should be included.
-
-Do not create or claim screenshots that were not saved.
-
----
-
-## 14. Conclusion
+## 13. Conclusion
 
 The time synchronization issue was caused by a large difference between the DC01 system clock and the external NTP reference.
 
@@ -1015,13 +1008,13 @@ Although `time.cloudflare.com` was already configured, DC01 was using its free-r
 
 An initial synchronization request was rejected because the required time correction was too large.
 
-The system clock was manually corrected using the time displayed on CLIENT01-NEW. After that correction, DC01 successfully synchronized with `time.cloudflare.com`.
+The system clock was manually corrected using the time displayed on CLIENT01. After that correction, DC01 successfully synchronized with `time.cloudflare.com`.
 
-CLIENT01-NEW initially used `Local CMOS Clock`. Its Windows Time configuration was changed to follow the Active Directory domain hierarchy, and synchronization completed successfully.
+CLIENT01 initially used `Local CMOS Clock`. Its Windows Time configuration was changed to follow the Active Directory domain hierarchy, and synchronization completed successfully.
 
 The final selected sources were:
 
 - DC01: `time.cloudflare.com`
-- CLIENT01-NEW: `dc01.corp.test`
+- CLIENT01: `dc01.corp.test`
 
 This troubleshooting exercise demonstrated the importance of understanding the Active Directory time hierarchy, diagnosing Windows Time service behavior, distinguishing configuration from successful synchronization, and verifying recovery using multiple pieces of evidence.
